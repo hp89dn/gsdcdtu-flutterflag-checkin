@@ -1,6 +1,4 @@
 import { Request } from 'express';
-import _get from 'lodash/get';
-import _set from 'lodash/set';
 import {
   BadRequestException,
   Body,
@@ -14,6 +12,7 @@ import {
 
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { get, set } from 'lodash';
 
 interface Session {
   user_id: string;
@@ -39,13 +38,13 @@ export class AuthController {
         );
       });
 
-    _set(req, 'session.user_id', user.id);
+    set(req, 'session.user_id', user.id);
     return user;
   }
 
   @Get('/verify')
   async validateById(@Req() req: Request) {
-    const user_id = _get(req, 'session.user_id', '');
+    const user_id = get(req, 'session.user_id', '');
 
     if (!user_id) throw new UnauthorizedException('Invalid user');
 
