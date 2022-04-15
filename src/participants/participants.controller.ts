@@ -16,12 +16,10 @@ const validateEmail = (email) => {
     );
 };
 
-@Roles(Role.Admin)
 @Controller('/participants')
 export class ParticipantController {
   constructor(private readonly participantService: ParticipantService) {}
 
-  @UseGuards(RolesGuard)
   @Post()
   async create(@Body('email') email: string, @Body('name') name: string) {
     if (!email || !name)
@@ -37,7 +35,6 @@ export class ParticipantController {
     });
   }
 
-  @UseGuards(RolesGuard)
   @Get()
   findAll() {
     return this.participantService.findAll();
@@ -59,7 +56,6 @@ export class ParticipantController {
     });
   }
 
-  @UseGuards(RolesGuard)
   @Put('/:id')
   async updateById(@Param('id') id: string, @Body('status') status: string) {
     if (status !== 'participated') status = 'not participate';
