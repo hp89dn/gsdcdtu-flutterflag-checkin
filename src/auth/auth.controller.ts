@@ -1,16 +1,22 @@
 import { Request } from 'express';
-
+import _get from 'lodash/get';
+import _set from 'lodash/set';
 import {
-    BadRequestException, Body, Controller, Get, Param, Post, Req, UnauthorizedException
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 
-declare module 'express-session' {
-  interface Session {
-    user_id: string;
-  }
+interface Session {
+  user_id: string;
 }
 
 @Controller('auth')
@@ -33,13 +39,13 @@ export class AuthController {
         );
       });
 
-    req.session.user_id = user.id;
+    _set(req, 'session.user_id', user.id);
     return user;
   }
 
   @Get('/verify')
   async validateById(@Req() req: Request) {
-    const { user_id } = req.session;
+    const user_id = _get(req, 'session.user_id', '');
 
     if (!user_id) throw new UnauthorizedException('Invalid user');
 
@@ -50,9 +56,6 @@ export class AuthController {
 
   @Get('/logout')
   async logout(@Req() req: Request) {
-    req.session.destroy(() => {
-      // nothing to do
-    });
     return 'logout successful';
   }
 }
