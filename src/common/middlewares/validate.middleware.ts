@@ -18,13 +18,7 @@ export class VaidateMiddleware implements NestMiddleware {
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
-    const user_id = get(req, 'session.user_id', '');
-    if (!user_id) throw new UnauthorizedException('not logged in');
-    const user = await this.authService.validateById(user_id).catch(() => {
-      throw new UnauthorizedException('invalid user');
-    });
-
-    req.user = user;
+   
     next();
   }
 }
