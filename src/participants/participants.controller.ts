@@ -30,7 +30,7 @@ export class ParticipantController {
 
     return await this.participantService.create({
       name: name,
-      email: email,
+      email: email.trim(),
       status: 'not participate',
     });
   }
